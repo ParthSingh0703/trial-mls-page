@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial MLS Residential Listing Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #00d4ff, #0078ff);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"],
+            select,
+            textarea {
+                padding: 10px 12px;
+                font-size: 16px;
+                /* Prevents zoom on iOS */
+            }
+
+            label {
+                font-size: 0.9rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+
+            .json-output pre {
+                font-size: 0.75rem;
+                padding: 15px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .checkbox-group {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .section-title::before {
+                width: 3px;
+                height: 20px;
+            }
+
+            .checkbox-item,
+            .radio-item {
+                padding: 6px 10px;
+            }
+
+            .submit-btn {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-item:hover,
+        .radio-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .checkbox-item input,
+        .radio-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #00d4ff;
+        }
+
+        .checkbox-item span,
+        .radio-item span {
+            color: #d0d0d0;
+            font-size: 0.9rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #00d4ff, #0078ff);
+            color: #fff;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .json-output {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .json-output.visible {
+            display: block;
+        }
+
+        .json-output h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .json-output pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #98fb98;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.7);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏠 Trial MLS Residential Listing Form</h1>
+        <p class="subtitle">Browser Automation Testing - Simulating Austin MLS Behavior</p>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="upload_images.html" class="submit-btn"
+                style="display: inline-block; width: auto; text-decoration: none; margin: 0;">Upload Images</a>
+        </div>
+
+        <form id="mlsForm">
+            <!-- LISTING META -->
+            <div class="form-section">
+                <h2 class="section-title">Listing Meta</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="listing_agreement">Listing Agreement</label>
+                        <select name="listing_meta.listing_agreement" id="listing_agreement">
+                            <option value="">-- Select --</option>
+                            <option value="Exclusive Right to Sell">Exclusive Right to Sell</option>
+                            <option value="Exclusive Agency">Exclusive Agency</option>
+                            <option value="Exclusive Right w/ Exception">Exclusive Right w/ Exception</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="listing_service">Listing Service</label>
+                        <select name="listing_meta.listing_service" id="listing_service">
+                            <option value="">-- Select --</option>
+                            <option value="Full Service">Full Service</option>
+                            <option value="Limited Service">Limited Service</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="listing_date">Listing Date</label>
+                        <input type="text" name="listing_meta.listing_date" id="listing_date" placeholder="MM/DD/YYYY"
+                            pattern="\d{2}/\d{2}/\d{4}">
+                    </div>
+                    <div class="form-group">
+                        <label for="expiration_date">Expiration Date</label>
+                        <input type="text" name="listing_meta.expiration_date" id="expiration_date"
+                            placeholder="MM/DD/YYYY" pattern="\d{2}/\d{2}/\d{4}">
+                    </div>
+                    <div class="form-group">
+                        <label for="list_price">List Price ($)</label>
+                        <input type="number" name="listing_meta.list_price" id="list_price" min="0" step="1000">
+                    </div>
+
+                    <!-- Listing Special Conditions - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Listing Special Conditions</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="None">
+                                <span>None</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="Auction">
+                                <span>Auction</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="Probate">
+                                <span>Probate</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="REO">
+                                <span>REO</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="Short Sale">
+                                <span>Short Sale</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions" value="Estate">
+                                <span>Estate</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="listing_meta.special_conditions"
+                                    value="Third Party Approval">
+                                <span>Third Party Approval</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADDRESS / LOCATION -->
+            <div class="form-section">
+                <h2 class="section-title">Address / Location</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="street_number">Street Number</label>
+                        <input type="text" name="address.street_number" id="street_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="street_dir_prefix">Street Direction Prefix</label>
+                        <select name="address.street_dir_prefix" id="street_dir_prefix">
+                            <option value="">-- Select --</option>
+                            <option value="N">N</option>
+                            <option value="S">S</option>
+                            <option value="E">E</option>
+                            <option value="W">W</option>
+                            <option value="NE">NE</option>
+                            <option value="NW">NW</option>
+                            <option value="SE">SE</option>
+                            <option value="SW">SW</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="street_name">Street Name</label>
+                        <input type="text" name="address.street_name" id="street_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="street_suffix">Street Suffix</label>
+                        <select name="address.street_suffix" id="street_suffix">
+                            <option value="">-- Select --</option>
+                            <option value="St">St</option>
+                            <option value="Ave">Ave</option>
+                            <option value="Blvd">Blvd</option>
+                            <option value="Rd">Rd</option>
+                            <option value="Ln">Ln</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Ct">Ct</option>
+                            <option value="Cir">Cir</option>
+                            <option value="Way">Way</option>
+                            <option value="Pkwy">Pkwy</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_number">Unit Number</label>
+                        <input type="text" name="address.unit_number" id="unit_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" name="address.city" id="city">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <select name="address.state" id="state">
+                            <option value="">-- Select --</option>
+                            <option value="TX">TX</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip_code">ZIP Code</label>
+                        <input type="text" name="address.zip_code" id="zip_code">
+                    </div>
+                    <div class="form-group">
+                        <label for="county">County</label>
+                        <input type="text" name="address.county" id="county">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCHOOLS -->
+            <div class="form-section">
+                <h2 class="section-title">Schools</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="school_district">School District</label>
+                        <select name="schools.school_district" id="school_district">
+                            <option value="">-- Select --</option>
+                            <option value="Austin ISD">Austin ISD</option>
+                            <option value="Round Rock ISD">Round Rock ISD</option>
+                            <option value="Leander ISD">Leander ISD</option>
+                            <option value="Pflugerville ISD">Pflugerville ISD</option>
+                            <option value="Lake Travis ISD">Lake Travis ISD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="elementary_school">Elementary School</label>
+                        <input type="text" name="schools.elementary_school" id="elementary_school">
+                    </div>
+                    <div class="form-group">
+                        <label for="middle_school">Middle School</label>
+                        <input type="text" name="schools.middle_school" id="middle_school">
+                    </div>
+                    <div class="form-group">
+                        <label for="high_school">High School</label>
+                        <input type="text" name="schools.high_school" id="high_school">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROPERTY DETAILS -->
+            <div class="form-section">
+                <h2 class="section-title">Property Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="property_sub_type">Property Sub Type</label>
+                        <select name="property.property_sub_type" id="property_sub_type">
+                            <option value="">-- Select --</option>
+                            <option value="Single Family Residence">Single Family Residence</option>
+                            <option value="Condominium">Condominium</option>
+                            <option value="Townhouse">Townhouse</option>
+                            <option value="Manufactured Home">Manufactured Home</option>
+                            <option value="Modular Home">Modular Home</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ownership_type">Ownership Type</label>
+                        <select name="property.ownership_type" id="ownership_type">
+                            <option value="">-- Select --</option>
+                            <option value="Fee Simple">Fee Simple</option>
+                            <option value="Common">Common</option>
+                            <option value="Fractional">Fractional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="levels">Levels</label>
+                        <select name="property.levels" id="levels">
+                            <option value="">-- Select --</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="3+">3+</option>
+                            <option value="Multi/Split">Multi/Split</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_built">Year Built</label>
+                        <input type="number" name="property.year_built" id="year_built" min="1800" max="2030">
+                    </div>
+                    <div class="form-group">
+                        <label for="year_built_source">Year Built Source</label>
+                        <select name="property.year_built_source" id="year_built_source">
+                            <option value="">-- Select --</option>
+                            <option value="Public Records">Public Records</option>
+                            <option value="Builder">Builder</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Appraiser">Appraiser</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="living_area">Living Area (sqft)</label>
+                        <input type="number" name="property.living_area" id="living_area" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="living_area_source">Living Area Source</label>
+                        <select name="property.living_area_source" id="living_area_source">
+                            <option value="">-- Select --</option>
+                            <option value="Public Records">Public Records</option>
+                            <option value="Builder">Builder</option>
+                            <option value="Appraiser">Appraiser</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lot_size">Lot Size (sqft)</label>
+                        <input type="number" name="property.lot_size" id="lot_size" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input type="number" name="property.bedrooms" id="bedrooms" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bathrooms_full">Full Bathrooms</label>
+                        <input type="number" name="property.bathrooms_full" id="bathrooms_full" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bathrooms_half">Half Bathrooms</label>
+                        <input type="number" name="property.bathrooms_half" id="bathrooms_half" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="garage_spaces">Garage Spaces</label>
+                        <input type="number" name="property.garage_spaces" id="garage_spaces" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="direction_faces">Direction Faces</label>
+                        <select name="property.direction_faces" id="direction_faces">
+                            <option value="">-- Select --</option>
+                            <option value="North">North</option>
+                            <option value="South">South</option>
+                            <option value="East">East</option>
+                            <option value="West">West</option>
+                            <option value="Northeast">Northeast</option>
+                            <option value="Northwest">Northwest</option>
+                            <option value="Southeast">Southeast</option>
+                            <option value="Southwest">Southwest</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="property_condition">Property Condition</label>
+                        <select name="property.property_condition" id="property_condition">
+                            <option value="">-- Select --</option>
+                            <option value="New Construction">New Construction</option>
+                            <option value="Updated/Remodeled">Updated/Remodeled</option>
+                            <option value="Fixer Upper">Fixer Upper</option>
+                            <option value="Historic">Historic</option>
+                            <option value="Tear Down">Tear Down</option>
+                            <option value="See Remarks">See Remarks</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="laundry_location">Laundry Location</label>
+                        <select name="property.laundry_location" id="laundry_location">
+                            <option value="">-- Select --</option>
+                            <option value="Laundry Room">Laundry Room</option>
+                            <option value="Garage">Garage</option>
+                            <option value="Closet">Closet</option>
+                            <option value="Inside">Inside</option>
+                            <option value="Outside">Outside</option>
+                        </select>
+                    </div>
+
+                    <!-- Construction Material - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Construction Material</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Brick">
+                                <span>Brick</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Stone">
+                                <span>Stone</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Stucco">
+                                <span>Stucco</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Frame">
+                                <span>Frame</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Wood Siding">
+                                <span>Wood Siding</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.construction_material" value="Hardiplank">
+                                <span>Hardiplank</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Foundation Details - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Foundation Details</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.foundation_details" value="Slab">
+                                <span>Slab</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.foundation_details" value="Pier & Beam">
+                                <span>Pier & Beam</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.foundation_details" value="Basement">
+                                <span>Basement</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.foundation_details" value="Raised">
+                                <span>Raised</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.foundation_details" value="None">
+                                <span>None</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Roof - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Roof</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.roof" value="Composition">
+                                <span>Composition</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.roof" value="Shingle">
+                                <span>Shingle</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.roof" value="Metal">
+                                <span>Metal</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.roof" value="Tile">
+                                <span>Tile</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="property.roof" value="Slate">
+                                <span>Slate</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOT FEATURES -->
+            <div class="form-section">
+                <h2 class="section-title">Lot Features</h2>
+                <div class="form-group full-width">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Corner Lot">
+                            <span>Corner Lot</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Cul-de-sac">
+                            <span>Cul-de-sac</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Level">
+                            <span>Level</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Trees – Moderate">
+                            <span>Trees – Moderate</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Trees – Heavy">
+                            <span>Trees – Heavy</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="Sprinkler System">
+                            <span>Sprinkler System</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="lot.lot_features" value="City Lot">
+                            <span>City Lot</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERIOR FEATURES -->
+            <div class="form-section">
+                <h2 class="section-title">Interior Features</h2>
+                <div class="form-grid">
+                    <!-- Interior Features - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Features</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.interior_features" value="Kitchen Island">
+                                <span>Kitchen Island</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.interior_features" value="Walk-In Closet">
+                                <span>Walk-In Closet</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.interior_features" value="Open Floorplan">
+                                <span>Open Floorplan</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.interior_features" value="High Ceilings">
+                                <span>High Ceilings</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.interior_features" value="Smart Home">
+                                <span>Smart Home</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Flooring - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Flooring</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.flooring" value="Tile">
+                                <span>Tile</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.flooring" value="Wood">
+                                <span>Wood</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.flooring" value="Carpet">
+                                <span>Carpet</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.flooring" value="Vinyl">
+                                <span>Vinyl</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.flooring" value="Concrete">
+                                <span>Concrete</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Appliances - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Appliances</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Refrigerator">
+                                <span>Refrigerator</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Dishwasher">
+                                <span>Dishwasher</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Microwave">
+                                <span>Microwave</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Oven">
+                                <span>Oven</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Cooktop">
+                                <span>Cooktop</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Washer">
+                                <span>Washer</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interior.appliances" value="Dryer">
+                                <span>Dryer</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXTERIOR FEATURES -->
+            <div class="form-section">
+                <h2 class="section-title">Exterior Features</h2>
+                <div class="form-grid">
+                    <!-- Exterior Features - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Features</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.exterior_features" value="Balcony">
+                                <span>Balcony</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.exterior_features" value="Covered Patio">
+                                <span>Covered Patio</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.exterior_features" value="Deck">
+                                <span>Deck</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.exterior_features" value="Private Yard">
+                                <span>Private Yard</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.exterior_features" value="Outdoor Grill">
+                                <span>Outdoor Grill</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Patio / Porch - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Patio / Porch</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.patio_porch" value="Covered">
+                                <span>Covered</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.patio_porch" value="Uncovered">
+                                <span>Uncovered</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.patio_porch" value="Screened">
+                                <span>Screened</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.patio_porch" value="Rear Porch">
+                                <span>Rear Porch</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.patio_porch" value="Front Porch">
+                                <span>Front Porch</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pool Features - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Pool Features</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.pool_features" value="In-Ground">
+                                <span>In-Ground</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.pool_features" value="Heated">
+                                <span>Heated</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.pool_features" value="Spa">
+                                <span>Spa</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="exterior.pool_features" value="None">
+                                <span>None</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UTILITIES & SYSTEMS -->
+            <div class="form-section">
+                <h2 class="section-title">Utilities & Systems</h2>
+                <div class="form-grid">
+                    <!-- Utilities - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Utilities</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.utilities" value="Electricity Connected">
+                                <span>Electricity Connected</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.utilities" value="Natural Gas Connected">
+                                <span>Natural Gas Connected</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.utilities" value="Water Connected">
+                                <span>Water Connected</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.utilities" value="Sewer Connected">
+                                <span>Sewer Connected</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.utilities" value="Internet Available">
+                                <span>Internet Available</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Heating - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Heating</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.heating" value="Central">
+                                <span>Central</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.heating" value="Natural Gas">
+                                <span>Natural Gas</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.heating" value="Electric">
+                                <span>Electric</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.heating" value="Heat Pump">
+                                <span>Heat Pump</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Cooling - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Cooling</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.cooling" value="Central Air">
+                                <span>Central Air</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.cooling" value="Zoned">
+                                <span>Zoned</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.cooling" value="Ceiling Fans">
+                                <span>Ceiling Fans</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Water Source - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Water Source</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.water_source" value="Public">
+                                <span>Public</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.water_source" value="Well">
+                                <span>Well</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Sewer - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Sewer</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.sewer" value="Public Sewer">
+                                <span>Public Sewer</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="utilities.sewer" value="Septic">
+                                <span>Septic</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINANCIAL -->
+            <div class="form-section">
+                <h2 class="section-title">Financial</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="association_fee">Association Fee ($)</label>
+                        <input type="number" name="financial.association_fee" id="association_fee" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="association_fee_frequency">Association Fee Frequency</label>
+                        <select name="financial.association_fee_frequency" id="association_fee_frequency">
+                            <option value="">-- Select --</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Annually">Annually</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_amount">Tax Amount ($)</label>
+                        <input type="number" name="financial.tax_amount" id="tax_amount" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="possession">Possession</label>
+                        <select name="financial.possession" id="possession">
+                            <option value="">-- Select --</option>
+                            <option value="Closing & Funding">Closing & Funding</option>
+                            <option value="Immediate">Immediate</option>
+                            <option value="Negotiable">Negotiable</option>
+                        </select>
+                    </div>
+
+                    <!-- Acceptable Financing - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Acceptable Financing</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.acceptable_financing" value="Cash">
+                                <span>Cash</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.acceptable_financing" value="Conventional">
+                                <span>Conventional</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.acceptable_financing" value="FHA">
+                                <span>FHA</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.acceptable_financing" value="VA">
+                                <span>VA</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.acceptable_financing" value="USDA">
+                                <span>USDA</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tax Exemptions - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Tax Exemptions</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.tax_exemptions" value="Homestead">
+                                <span>Homestead</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.tax_exemptions" value="Over 65">
+                                <span>Over 65</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="financial.tax_exemptions" value="Disabled Veteran">
+                                <span>Disabled Veteran</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHOWING -->
+            <div class="form-section">
+                <h2 class="section-title">Showing</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="occupant_type">Occupant Type</label>
+                        <select name="showing.occupant_type" id="occupant_type">
+                            <option value="">-- Select --</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Tenant">Tenant</option>
+                            <option value="Vacant">Vacant</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lockbox_type">Lockbox Type</label>
+                        <select name="showing.lockbox_type" id="lockbox_type">
+                            <option value="">-- Select --</option>
+                            <option value="Combo">Combo</option>
+                            <option value="Electronic">Electronic</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+
+                    <!-- Showing Requirements - Multi-select -->
+                    <div class="form-group full-width">
+                        <label>Showing Requirements</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="showing.showing_requirements" value="Appointment Required">
+                                <span>Appointment Required</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="showing.showing_requirements" value="Showing Service">
+                                <span>Showing Service</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="showing.showing_requirements" value="Lockbox">
+                                <span>Lockbox</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="showing.showing_requirements" value="Call Agent">
+                                <span>Call Agent</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="showing.showing_requirements" value="Go and Show">
+                                <span>Go and Show</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMUNITY FEATURES -->
+            <div class="form-section">
+                <h2 class="section-title">Community Features</h2>
+                <div class="form-group full-width">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="community.community_features" value="Pool">
+                            <span>Pool</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="community.community_features" value="Clubhouse">
+                            <span>Clubhouse</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="community.community_features" value="Park">
+                            <span>Park</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="community.community_features" value="Fitness Center">
+                            <span>Fitness Center</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="community.community_features" value="Playground">
+                            <span>Playground</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOOLEAN FIELDS -->
+            <div class="form-section">
+                <h2 class="section-title">Additional Options (Yes/No)</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Flex Listing</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.flex_listing" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.flex_listing" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Flood Plain</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.flood_plain" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.flood_plain" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ETJ (Extraterritorial Jurisdiction)</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.etj" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.etj" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Association</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.association" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.association" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Seller Contributions</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.seller_contributions" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.seller_contributions" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Intermediary</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.intermediary" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.intermediary" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Entire Listing Display</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_entire_listing_display" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_entire_listing_display" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Automated Valuation Display</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_automated_valuation_display" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_automated_valuation_display" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Consumer Comment</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_consumer_comment" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_consumer_comment" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Address Display</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_address_display" value="true">
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="options.internet_address_display" value="false">
+                                <span>No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REMARKS -->
+            <div class="form-section">
+                <h2 class="section-title">Remarks</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="public_remarks">Public Remarks</label>
+                        <textarea name="remarks.public_remarks" id="public_remarks"
+                            placeholder="Enter public-facing property description..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="private_remarks">Private Remarks (Agent Only)</label>
+                        <textarea name="remarks.private_remarks" id="private_remarks"
+                            placeholder="Enter private agent notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate Listing JSON</button>
+        </form>
+
+        <!-- JSON Output Section -->
+        <div id="jsonOutput" class="json-output">
+            <h3>📋 Generated CanonicalListing JSON</h3>
+            <pre id="jsonContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('mlsForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const result = {};
+
+            // Process all form elements
+            for (const [key, value] of formData.entries()) {
+                setNestedValue(result, key, value);
+            }
+
+            // Process checkbox groups (multi-select)
+            const checkboxGroups = {};
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const name = checkbox.name;
+                if (!checkboxGroups[name]) {
+                    checkboxGroups[name] = [];
+                }
+                checkboxGroups[name].push(checkbox.value);
+            });
+
+            // Set checkbox group values
+            for (const [key, values] of Object.entries(checkboxGroups)) {
+                setNestedValue(result, key, values);
+            }
+
+            // Process radio buttons (boolean fields)
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                const name = radio.name;
+                const value = radio.value === 'true';
+                setNestedValue(result, name, value);
+            });
+
+            // Convert numeric fields
+            const numericFields = [
+                'listing_meta.list_price',
+                'property.year_built',
+                'property.living_area',
+                'property.lot_size',
+                'property.bedrooms',
+                'property.bathrooms_full',
+                'property.bathrooms_half',
+                'property.garage_spaces',
+                'financial.association_fee',
+                'financial.tax_amount'
+            ];
+
+            numericFields.forEach(field => {
+                const value = getNestedValue(result, field);
+                if (value !== undefined && value !== '') {
+                    setNestedValue(result, field, parseFloat(value));
+                }
+            });
+
+            // Display JSON
+            const jsonOutput = document.getElementById('jsonOutput');
+            const jsonContent = document.getElementById('jsonContent');
+            jsonContent.textContent = JSON.stringify(result, null, 2);
+            jsonOutput.classList.add('visible');
+
+            // Scroll to output
+            jsonOutput.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        function setNestedValue(obj, path, value) {
+            const keys = path.split('.');
+            let current = obj;
+
+            for (let i = 0; i < keys.length - 1; i++) {
+                const key = keys[i];
+                if (!(key in current)) {
+                    current[key] = {};
+                }
+                current = current[key];
+            }
+
+            const finalKey = keys[keys.length - 1];
+
+            // Handle array values for checkbox groups
+            if (Array.isArray(value)) {
+                current[finalKey] = value;
+            } else if (value !== '') {
+                current[finalKey] = value;
+            }
+        }
+
+        function getNestedValue(obj, path) {
+            const keys = path.split('.');
+            let current = obj;
+
+            for (const key of keys) {
+                if (current === undefined || current === null) {
+                    return undefined;
+                }
+                current = current[key];
+            }
+
+            return current;
+        }
+    </script>
+</body>
+
+</html>

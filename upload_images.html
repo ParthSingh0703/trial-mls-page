@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Listing Images - Trial MLS</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .action-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: transparent;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0078ff);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .upload-input {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .image-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .image-details {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        select,
+        input[type="text"] {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        select:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+        select option {
+            background: #1a1a2e;
+        }
+
+        .no-images {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: #888;
+            font-style: italic;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload Listing Images</h1>
+
+        <div class="action-bar">
+            <div class="upload-btn-wrapper">
+                <button class="btn btn-primary">Choose Images</button>
+                <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*">
+            </div>
+            <a href="index.html" class="btn btn-secondary">Back to Form</a>
+        </div>
+
+        <div id="imageContainer" class="image-grid">
+            <div class="no-images">
+                No images uploaded yet. Click "Choose Images" to get started.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const imageContainer = document.getElementById('imageContainer');
+        const roomTypes = [
+            'Living Room', 'Bedroom', 'Kitchen', 'Bathroom',
+            'Dining Room', 'Exterior', 'Office', 'Backyard',
+            'Garage', 'Hallway', 'Laundry', 'Other'
+        ];
+
+        fileInput.addEventListener('change', function (e) {
+            const files = e.target.files;
+
+            if (files.length > 0) {
+                // Clear "no images" message if it exists
+                const noImagesMsg = imageContainer.querySelector('.no-images');
+                if (noImagesMsg) {
+                    noImagesMsg.remove();
+                }
+            }
+
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const card = createImageCard(e.target.result, file.name);
+                    imageContainer.appendChild(card);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            // Reset input so same files can be selected again if needed
+            fileInput.value = '';
+        });
+
+        function createImageCard(src, filename) {
+            const card = document.createElement('div');
+            card.className = 'image-card';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'image-preview';
+            img.alt = filename;
+
+            const details = document.createElement('div');
+            details.className = 'image-details';
+
+            // Room Type
+            const roomGroup = document.createElement('div');
+            roomGroup.className = 'form-group';
+            const roomLabel = document.createElement('label');
+            roomLabel.textContent = 'Room Type';
+            const roomSelect = document.createElement('select');
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Select Room Type";
+            roomSelect.appendChild(defaultOption);
+
+            roomTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                roomSelect.appendChild(option);
+            });
+
+            roomGroup.appendChild(roomLabel);
+            roomGroup.appendChild(roomSelect);
+
+            // Description
+            const descGroup = document.createElement('div');
+            descGroup.className = 'form-group';
+            const descLabel = document.createElement('label');
+            descLabel.textContent = 'Description';
+            const descInput = document.createElement('input');
+            descInput.type = 'text';
+            descInput.placeholder = 'Enter image description...';
+
+            descGroup.appendChild(descLabel);
+            descGroup.appendChild(descInput);
+
+            details.appendChild(roomGroup);
+            details.appendChild(descGroup);
+
+            card.appendChild(img);
+            card.appendChild(details);
+
+            return card;
+        }
+    </script>
+</body>
+
+</html>
