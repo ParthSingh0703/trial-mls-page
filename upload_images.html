@@ -195,7 +195,8 @@
         <h1>Upload Listing Images</h1>
 
         <div class="action-bar">
-            <div class="upload-btn-wrapper">
+            <button id="addPhotosBtn" class="btn btn-primary">Add Photos</button>
+            <div id="uploadBtnWrapper" class="upload-btn-wrapper" style="display: none;">
                 <button class="btn btn-primary">Choose Images</button>
                 <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*">
             </div>
@@ -204,7 +205,7 @@
 
         <div id="imageContainer" class="image-grid">
             <div class="no-images">
-                No images uploaded yet. Click "Choose Images" to get started.
+                No images uploaded yet. Click "Add Photos" to get started.
             </div>
         </div>
     </div>
@@ -212,11 +213,19 @@
     <script>
         const fileInput = document.getElementById('fileInput');
         const imageContainer = document.getElementById('imageContainer');
+        const addPhotosBtn = document.getElementById('addPhotosBtn');
+        const uploadBtnWrapper = document.getElementById('uploadBtnWrapper');
+
         const roomTypes = [
             'Living Room', 'Bedroom', 'Kitchen', 'Bathroom',
             'Dining Room', 'Exterior', 'Office', 'Backyard',
             'Garage', 'Hallway', 'Laundry', 'Other'
         ];
+
+        addPhotosBtn.addEventListener('click', function () {
+            addPhotosBtn.style.display = 'none';
+            uploadBtnWrapper.style.display = 'inline-block';
+        });
 
         fileInput.addEventListener('change', function (e) {
             const files = e.target.files;

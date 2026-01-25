@@ -346,6 +346,83 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 212, 255, 0.7);
         }
+
+        /* Custom Multi-Select Dropdown Styles */
+        .multi-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .multi-select-header {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .multi-select-header:hover {
+            border-color: #00d4ff;
+        }
+
+        .multi-select-header::after {
+            content: '▼';
+            font-size: 0.8rem;
+            margin-left: 10px;
+            color: #888;
+        }
+
+        .multi-select-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a2e;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .multi-select-options.open {
+            display: block;
+        }
+
+        .multi-select-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #d0d0d0;
+            transition: background 0.2s ease;
+            gap: 10px;
+        }
+
+        .multi-select-option:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .multi-select-option.selected {
+            background: rgba(0, 212, 255, 0.2);
+            color: #fff;
+        }
+
+        .multi-select-option.selected::after {
+            content: '✓';
+            color: #00d4ff;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -398,38 +475,16 @@
 
                     <!-- Listing Special Conditions - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Listing Special Conditions</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="None">
-                                <span>None</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="Auction">
-                                <span>Auction</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="Probate">
-                                <span>Probate</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="REO">
-                                <span>REO</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="Short Sale">
-                                <span>Short Sale</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions" value="Estate">
-                                <span>Estate</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="listing_meta.special_conditions"
-                                    value="Third Party Approval">
-                                <span>Third Party Approval</span>
-                            </label>
-                        </div>
+                        <label for="special_conditions">Listing Special Conditions</label>
+                        <select name="listing_meta.special_conditions" id="special_conditions" multiple size="4">
+                            <option value="None">None</option>
+                            <option value="Auction">Auction</option>
+                            <option value="Probate">Probate</option>
+                            <option value="REO">REO</option>
+                            <option value="Short Sale">Short Sale</option>
+                            <option value="Estate">Estate</option>
+                            <option value="Third Party Approval">Third Party Approval</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -654,87 +709,39 @@
 
                     <!-- Construction Material - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Construction Material</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Brick">
-                                <span>Brick</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Stone">
-                                <span>Stone</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Stucco">
-                                <span>Stucco</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Frame">
-                                <span>Frame</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Wood Siding">
-                                <span>Wood Siding</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.construction_material" value="Hardiplank">
-                                <span>Hardiplank</span>
-                            </label>
-                        </div>
+                        <label for="construction_material">Construction Material</label>
+                        <select name="property.construction_material" id="construction_material" multiple size="4">
+                            <option value="Brick">Brick</option>
+                            <option value="Stone">Stone</option>
+                            <option value="Stucco">Stucco</option>
+                            <option value="Frame">Frame</option>
+                            <option value="Wood Siding">Wood Siding</option>
+                            <option value="Hardiplank">Hardiplank</option>
+                        </select>
                     </div>
 
                     <!-- Foundation Details - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Foundation Details</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.foundation_details" value="Slab">
-                                <span>Slab</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.foundation_details" value="Pier & Beam">
-                                <span>Pier & Beam</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.foundation_details" value="Basement">
-                                <span>Basement</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.foundation_details" value="Raised">
-                                <span>Raised</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.foundation_details" value="None">
-                                <span>None</span>
-                            </label>
-                        </div>
+                        <label for="foundation_details">Foundation Details</label>
+                        <select name="property.foundation_details" id="foundation_details" multiple size="4">
+                            <option value="Slab">Slab</option>
+                            <option value="Pier & Beam">Pier & Beam</option>
+                            <option value="Basement">Basement</option>
+                            <option value="Raised">Raised</option>
+                            <option value="None">None</option>
+                        </select>
                     </div>
 
                     <!-- Roof - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Roof</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.roof" value="Composition">
-                                <span>Composition</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.roof" value="Shingle">
-                                <span>Shingle</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.roof" value="Metal">
-                                <span>Metal</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.roof" value="Tile">
-                                <span>Tile</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="property.roof" value="Slate">
-                                <span>Slate</span>
-                            </label>
-                        </div>
+                        <label for="roof">Roof</label>
+                        <select name="property.roof" id="roof" multiple size="4">
+                            <option value="Composition">Composition</option>
+                            <option value="Shingle">Shingle</option>
+                            <option value="Metal">Metal</option>
+                            <option value="Tile">Tile</option>
+                            <option value="Slate">Slate</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -743,36 +750,16 @@
             <div class="form-section">
                 <h2 class="section-title">Lot Features</h2>
                 <div class="form-group full-width">
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Corner Lot">
-                            <span>Corner Lot</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Cul-de-sac">
-                            <span>Cul-de-sac</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Level">
-                            <span>Level</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Trees – Moderate">
-                            <span>Trees – Moderate</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Trees – Heavy">
-                            <span>Trees – Heavy</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="Sprinkler System">
-                            <span>Sprinkler System</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="lot.lot_features" value="City Lot">
-                            <span>City Lot</span>
-                        </label>
-                    </div>
+                    <label for="lot_features">Lot Features</label>
+                    <select name="lot.lot_features" id="lot_features" multiple size="6">
+                        <option value="Corner Lot">Corner Lot</option>
+                        <option value="Cul-de-sac">Cul-de-sac</option>
+                        <option value="Level">Level</option>
+                        <option value="Trees – Moderate">Trees – Moderate</option>
+                        <option value="Trees – Heavy">Trees – Heavy</option>
+                        <option value="Sprinkler System">Sprinkler System</option>
+                        <option value="City Lot">City Lot</option>
+                    </select>
                 </div>
             </div>
 
@@ -782,91 +769,40 @@
                 <div class="form-grid">
                     <!-- Interior Features - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Features</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.interior_features" value="Kitchen Island">
-                                <span>Kitchen Island</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.interior_features" value="Walk-In Closet">
-                                <span>Walk-In Closet</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.interior_features" value="Open Floorplan">
-                                <span>Open Floorplan</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.interior_features" value="High Ceilings">
-                                <span>High Ceilings</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.interior_features" value="Smart Home">
-                                <span>Smart Home</span>
-                            </label>
-                        </div>
+                        <label for="interior_features">Features</label>
+                        <select name="interior.interior_features" id="interior_features" multiple size="4">
+                            <option value="Kitchen Island">Kitchen Island</option>
+                            <option value="Walk-In Closet">Walk-In Closet</option>
+                            <option value="Open Floorplan">Open Floorplan</option>
+                            <option value="High Ceilings">High Ceilings</option>
+                            <option value="Smart Home">Smart Home</option>
+                        </select>
                     </div>
 
                     <!-- Flooring - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Flooring</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.flooring" value="Tile">
-                                <span>Tile</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.flooring" value="Wood">
-                                <span>Wood</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.flooring" value="Carpet">
-                                <span>Carpet</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.flooring" value="Vinyl">
-                                <span>Vinyl</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.flooring" value="Concrete">
-                                <span>Concrete</span>
-                            </label>
-                        </div>
+                        <label for="flooring">Flooring</label>
+                        <select name="interior.flooring" id="flooring" multiple size="4">
+                            <option value="Tile">Tile</option>
+                            <option value="Wood">Wood</option>
+                            <option value="Carpet">Carpet</option>
+                            <option value="Vinyl">Vinyl</option>
+                            <option value="Concrete">Concrete</option>
+                        </select>
                     </div>
 
                     <!-- Appliances - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Appliances</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Refrigerator">
-                                <span>Refrigerator</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Dishwasher">
-                                <span>Dishwasher</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Microwave">
-                                <span>Microwave</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Oven">
-                                <span>Oven</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Cooktop">
-                                <span>Cooktop</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Washer">
-                                <span>Washer</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="interior.appliances" value="Dryer">
-                                <span>Dryer</span>
-                            </label>
-                        </div>
+                        <label for="appliances">Appliances</label>
+                        <select name="interior.appliances" id="appliances" multiple size="6">
+                            <option value="Refrigerator">Refrigerator</option>
+                            <option value="Dishwasher">Dishwasher</option>
+                            <option value="Microwave">Microwave</option>
+                            <option value="Oven">Oven</option>
+                            <option value="Cooktop">Cooktop</option>
+                            <option value="Washer">Washer</option>
+                            <option value="Dryer">Dryer</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -877,79 +813,37 @@
                 <div class="form-grid">
                     <!-- Exterior Features - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Features</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.exterior_features" value="Balcony">
-                                <span>Balcony</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.exterior_features" value="Covered Patio">
-                                <span>Covered Patio</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.exterior_features" value="Deck">
-                                <span>Deck</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.exterior_features" value="Private Yard">
-                                <span>Private Yard</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.exterior_features" value="Outdoor Grill">
-                                <span>Outdoor Grill</span>
-                            </label>
-                        </div>
+                        <label for="exterior_features">Features</label>
+                        <select name="exterior.exterior_features" id="exterior_features" multiple size="4">
+                            <option value="Balcony">Balcony</option>
+                            <option value="Covered Patio">Covered Patio</option>
+                            <option value="Deck">Deck</option>
+                            <option value="Private Yard">Private Yard</option>
+                            <option value="Outdoor Grill">Outdoor Grill</option>
+                        </select>
                     </div>
 
                     <!-- Patio / Porch - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Patio / Porch</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.patio_porch" value="Covered">
-                                <span>Covered</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.patio_porch" value="Uncovered">
-                                <span>Uncovered</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.patio_porch" value="Screened">
-                                <span>Screened</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.patio_porch" value="Rear Porch">
-                                <span>Rear Porch</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.patio_porch" value="Front Porch">
-                                <span>Front Porch</span>
-                            </label>
-                        </div>
+                        <label for="patio_porch">Patio / Porch</label>
+                        <select name="exterior.patio_porch" id="patio_porch" multiple size="4">
+                            <option value="Covered">Covered</option>
+                            <option value="Uncovered">Uncovered</option>
+                            <option value="Screened">Screened</option>
+                            <option value="Rear Porch">Rear Porch</option>
+                            <option value="Front Porch">Front Porch</option>
+                        </select>
                     </div>
 
                     <!-- Pool Features - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Pool Features</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.pool_features" value="In-Ground">
-                                <span>In-Ground</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.pool_features" value="Heated">
-                                <span>Heated</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.pool_features" value="Spa">
-                                <span>Spa</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="exterior.pool_features" value="None">
-                                <span>None</span>
-                            </label>
-                        </div>
+                        <label for="pool_features">Pool Features</label>
+                        <select name="exterior.pool_features" id="pool_features" multiple size="4">
+                            <option value="In-Ground">In-Ground</option>
+                            <option value="Heated">Heated</option>
+                            <option value="Spa">Spa</option>
+                            <option value="None">None</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -960,101 +854,53 @@
                 <div class="form-grid">
                     <!-- Utilities - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Utilities</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.utilities" value="Electricity Connected">
-                                <span>Electricity Connected</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.utilities" value="Natural Gas Connected">
-                                <span>Natural Gas Connected</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.utilities" value="Water Connected">
-                                <span>Water Connected</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.utilities" value="Sewer Connected">
-                                <span>Sewer Connected</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.utilities" value="Internet Available">
-                                <span>Internet Available</span>
-                            </label>
-                        </div>
+                        <label for="utilities">Utilities</label>
+                        <select name="utilities.utilities" id="utilities" multiple size="4">
+                            <option value="Electricity Connected">Electricity Connected</option>
+                            <option value="Natural Gas Connected">Natural Gas Connected</option>
+                            <option value="Water Connected">Water Connected</option>
+                            <option value="Sewer Connected">Sewer Connected</option>
+                            <option value="Internet Available">Internet Available</option>
+                        </select>
                     </div>
 
                     <!-- Heating - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Heating</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.heating" value="Central">
-                                <span>Central</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.heating" value="Natural Gas">
-                                <span>Natural Gas</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.heating" value="Electric">
-                                <span>Electric</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.heating" value="Heat Pump">
-                                <span>Heat Pump</span>
-                            </label>
-                        </div>
+                        <label for="heating">Heating</label>
+                        <select name="utilities.heating" id="heating" multiple size="4">
+                            <option value="Central">Central</option>
+                            <option value="Natural Gas">Natural Gas</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Heat Pump">Heat Pump</option>
+                        </select>
                     </div>
 
                     <!-- Cooling - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Cooling</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.cooling" value="Central Air">
-                                <span>Central Air</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.cooling" value="Zoned">
-                                <span>Zoned</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.cooling" value="Ceiling Fans">
-                                <span>Ceiling Fans</span>
-                            </label>
-                        </div>
+                        <label for="cooling">Cooling</label>
+                        <select name="utilities.cooling" id="cooling" multiple size="4">
+                            <option value="Central Air">Central Air</option>
+                            <option value="Zoned">Zoned</option>
+                            <option value="Ceiling Fans">Ceiling Fans</option>
+                        </select>
                     </div>
 
                     <!-- Water Source - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Water Source</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.water_source" value="Public">
-                                <span>Public</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.water_source" value="Well">
-                                <span>Well</span>
-                            </label>
-                        </div>
+                        <label for="water_source">Water Source</label>
+                        <select name="utilities.water_source" id="water_source" multiple size="3">
+                            <option value="Public">Public</option>
+                            <option value="Well">Well</option>
+                        </select>
                     </div>
 
                     <!-- Sewer - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Sewer</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.sewer" value="Public Sewer">
-                                <span>Public Sewer</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="utilities.sewer" value="Septic">
-                                <span>Septic</span>
-                            </label>
-                        </div>
+                        <label for="sewer">Sewer</label>
+                        <select name="utilities.sewer" id="sewer" multiple size="3">
+                            <option value="Public Sewer">Public Sewer</option>
+                            <option value="Septic">Septic</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -1092,48 +938,24 @@
 
                     <!-- Acceptable Financing - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Acceptable Financing</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.acceptable_financing" value="Cash">
-                                <span>Cash</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.acceptable_financing" value="Conventional">
-                                <span>Conventional</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.acceptable_financing" value="FHA">
-                                <span>FHA</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.acceptable_financing" value="VA">
-                                <span>VA</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.acceptable_financing" value="USDA">
-                                <span>USDA</span>
-                            </label>
-                        </div>
+                        <label for="acceptable_financing">Acceptable Financing</label>
+                        <select name="financial.acceptable_financing" id="acceptable_financing" multiple size="4">
+                            <option value="Cash">Cash</option>
+                            <option value="Conventional">Conventional</option>
+                            <option value="FHA">FHA</option>
+                            <option value="VA">VA</option>
+                            <option value="USDA">USDA</option>
+                        </select>
                     </div>
 
                     <!-- Tax Exemptions - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Tax Exemptions</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.tax_exemptions" value="Homestead">
-                                <span>Homestead</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.tax_exemptions" value="Over 65">
-                                <span>Over 65</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="financial.tax_exemptions" value="Disabled Veteran">
-                                <span>Disabled Veteran</span>
-                            </label>
-                        </div>
+                        <label for="tax_exemptions">Tax Exemptions</label>
+                        <select name="financial.tax_exemptions" id="tax_exemptions" multiple size="3">
+                            <option value="Homestead">Homestead</option>
+                            <option value="Over 65">Over 65</option>
+                            <option value="Disabled Veteran">Disabled Veteran</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -1163,29 +985,14 @@
 
                     <!-- Showing Requirements - Multi-select -->
                     <div class="form-group full-width">
-                        <label>Showing Requirements</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="showing.showing_requirements" value="Appointment Required">
-                                <span>Appointment Required</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="showing.showing_requirements" value="Showing Service">
-                                <span>Showing Service</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="showing.showing_requirements" value="Lockbox">
-                                <span>Lockbox</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="showing.showing_requirements" value="Call Agent">
-                                <span>Call Agent</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="showing.showing_requirements" value="Go and Show">
-                                <span>Go and Show</span>
-                            </label>
-                        </div>
+                        <label for="showing_requirements">Showing Requirements</label>
+                        <select name="showing.showing_requirements" id="showing_requirements" multiple size="4">
+                            <option value="Appointment Required">Appointment Required</option>
+                            <option value="Showing Service">Showing Service</option>
+                            <option value="Lockbox">Lockbox</option>
+                            <option value="Call Agent">Call Agent</option>
+                            <option value="Go and Show">Go and Show</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -1194,28 +1001,14 @@
             <div class="form-section">
                 <h2 class="section-title">Community Features</h2>
                 <div class="form-group full-width">
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="community.community_features" value="Pool">
-                            <span>Pool</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="community.community_features" value="Clubhouse">
-                            <span>Clubhouse</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="community.community_features" value="Park">
-                            <span>Park</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="community.community_features" value="Fitness Center">
-                            <span>Fitness Center</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="community.community_features" value="Playground">
-                            <span>Playground</span>
-                        </label>
-                    </div>
+                    <label for="community_features">Community Features</label>
+                    <select name="community.community_features" id="community_features" multiple size="4">
+                        <option value="Pool">Pool</option>
+                        <option value="Clubhouse">Clubhouse</option>
+                        <option value="Park">Park</option>
+                        <option value="Fitness Center">Fitness Center</option>
+                        <option value="Playground">Playground</option>
+                    </select>
                 </div>
             </div>
 
@@ -1384,6 +1177,91 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMultiSelects();
+        });
+
+        function initializeMultiSelects() {
+            const multiSelects = document.querySelectorAll('select[multiple]');
+
+            multiSelects.forEach(select => {
+                // Hide original select
+                select.style.display = 'none';
+
+                // Create container
+                const container = document.createElement('div');
+                container.className = 'multi-select-container';
+                select.parentNode.insertBefore(container, select);
+                container.appendChild(select);
+
+                // Create header
+                const header = document.createElement('div');
+                header.className = 'multi-select-header';
+                header.textContent = 'Select Options...'; // Initial Text
+                container.appendChild(header);
+
+                // Create options list
+                const optionsList = document.createElement('div');
+                optionsList.className = 'multi-select-options';
+
+                // Populate options
+                Array.from(select.options).forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'multi-select-option';
+                    optionDiv.textContent = option.text;
+                    optionDiv.dataset.value = option.value;
+
+                    if (option.selected) {
+                        optionDiv.classList.add('selected');
+                    }
+
+                    // Click handler for option
+                    optionDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        // Toggle selected class
+                        optionDiv.classList.toggle('selected');
+
+                        // Toggle corresponding native option
+                        option.selected = !option.selected;
+
+                        updateHeader(header, select);
+                    });
+
+                    optionsList.appendChild(optionDiv);
+                });
+
+                container.appendChild(optionsList);
+
+                // Header click to toggle dropdown
+                header.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Close others first
+                    document.querySelectorAll('.multi-select-options.open').forEach(el => {
+                        if (el !== optionsList) el.classList.remove('open');
+                    });
+                    optionsList.classList.toggle('open');
+                });
+            });
+
+            // Click outside to close
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.multi-select-options.open').forEach(el => {
+                    el.classList.remove('open');
+                });
+            });
+        }
+
+        function updateHeader(headerElement, selectElement) {
+            const selectedOptions = Array.from(selectElement.selectedOptions);
+            if (selectedOptions.length === 0) {
+                headerElement.textContent = 'Select Options...';
+            } else if (selectedOptions.length === 1) {
+                headerElement.textContent = selectedOptions[0].text;
+            } else {
+                headerElement.textContent = `${selectedOptions.length} selected`;
+            }
+        }
+
         document.getElementById('mlsForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -1395,20 +1273,14 @@
                 setNestedValue(result, key, value);
             }
 
-            // Process checkbox groups (multi-select)
-            const checkboxGroups = {};
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                const name = checkbox.name;
-                if (!checkboxGroups[name]) {
-                    checkboxGroups[name] = [];
+            // Process multi-select dropdowns
+            document.querySelectorAll('select[multiple]').forEach(select => {
+                const name = select.name;
+                const values = Array.from(select.selectedOptions).map(option => option.value);
+                if (values.length > 0) {
+                    setNestedValue(result, name, values);
                 }
-                checkboxGroups[name].push(checkbox.value);
             });
-
-            // Set checkbox group values
-            for (const [key, values] of Object.entries(checkboxGroups)) {
-                setNestedValue(result, key, values);
-            }
 
             // Process radio buttons (boolean fields)
             document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
