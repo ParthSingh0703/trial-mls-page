@@ -165,14 +165,45 @@
             background: #1a1a2e;
         }
 
-        .no-images {
-            grid-column: 1 / -1;
+        .dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
             text-align: center;
-            padding: 50px;
-            color: #888;
-            font-style: italic;
-            border: 2px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .dropzone.drag-over {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.2);
+            transition: color 0.3s ease;
+        }
+
+        .dropzone.drag-over .dropzone-icon {
+            color: #00d4ff;
+        }
+
+        .dropzone-text {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+        }
+
+        .dropzone-text b {
+            color: #00d4ff;
         }
 
         @media (max-width: 768px) {
@@ -197,15 +228,22 @@
         <div class="action-bar">
             <button id="addPhotosBtn" class="btn btn-primary">Add Photos</button>
             <div id="uploadBtnWrapper" class="upload-btn-wrapper" style="display: none;">
-                <button class="btn btn-primary">Choose Images</button>
+                <button class="btn btn-primary">Browse...</button>
                 <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*">
             </div>
             <a href="index.html" class="btn btn-secondary">Back to Form</a>
         </div>
 
+        <div id="dropzone" class="dropzone" style="display: none;">
+            <div class="dropzone-icon">📁</div>
+            <div class="dropzone-text">
+                Browse...
+            </div>
+        </div>
+
         <div id="imageContainer" class="image-grid">
             <div class="no-images">
-                No images uploaded yet. Click "Add Photos" to get started.
+                No images uploaded yet.
             </div>
         </div>
     </div>
@@ -222,16 +260,53 @@
             'Garage', 'Hallway', 'Laundry', 'Other'
         ];
 
+        const dropzone = document.getElementById('dropzone');
+
         addPhotosBtn.addEventListener('click', function () {
             addPhotosBtn.style.display = 'none';
-            uploadBtnWrapper.style.display = 'inline-block';
+            dropzone.style.display = 'flex';
         });
 
-        fileInput.addEventListener('change', function (e) {
-            const files = e.target.files;
+        // Clicking dropzone triggers file input
+        dropzone.addEventListener('click', () => fileInput.click());
 
+        // Drag and Drop Handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropzone.classList.add('drag-over');
+        }
+
+        function unhighlight(e) {
+            dropzone.classList.remove('drag-over');
+        }
+
+        dropzone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
             if (files.length > 0) {
-                // Clear "no images" message if it exists
                 const noImagesMsg = imageContainer.querySelector('.no-images');
                 if (noImagesMsg) {
                     noImagesMsg.remove();
@@ -242,16 +317,16 @@
                 if (!file.type.startsWith('image/')) return;
 
                 const reader = new FileReader();
-
                 reader.onload = function (e) {
                     const card = createImageCard(e.target.result, file.name);
                     imageContainer.appendChild(card);
                 };
-
                 reader.readAsDataURL(file);
             });
+        }
 
-            // Reset input so same files can be selected again if needed
+        fileInput.addEventListener('change', function (e) {
+            handleFiles(this.files);
             fileInput.value = '';
         });
 
