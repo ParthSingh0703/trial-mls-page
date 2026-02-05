@@ -1343,16 +1343,22 @@
         <div class="container">
             <h2 style="color: #00d4ff; text-align: center; margin-bottom: 30px;">📸 Listing Photos</h2>
 
-            <div class="action-bar">
-                <button type="button" id="addPhotosBtn" class="btn btn-primary">Add Photos</button>
-                <button id="closePhotosBtn" class="btn btn-secondary">Back to Form</button>
-                <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*"
-                    style="display: none;">
+            <div id="uploadActionArea">
+                <div id="initialActions" class="action-bar">
+                    <button type="button" id="addPhotosBtn" class="btn btn-primary">Add Photos</button>
+                    <button id="closePhotosBtn" class="btn btn-secondary">Back to Form</button>
+                </div>
+
+                <div id="dropzone" class="dropzone" style="display: none; margin-bottom: 30px;">
+                    <div style="display: flex; gap: 15px; align-items: center; justify-content: center; width: 100%;">
+                        <button type="button" class="btn btn-primary" id="dropzoneBrowseBtn">Browse...</button>
+                        <button type="button" id="closePhotosBtn2" class="btn btn-secondary">Back to Form</button>
+                    </div>
+                </div>
             </div>
 
-            <div id="dropzone" class="dropzone" style="display: none;">
-                <button type="button" class="btn btn-primary">Browse...</button>
-            </div>
+            <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*"
+                style="display: none;">
 
             <div id="imageContainer" class="image-grid" style="display: none;">
                 <div class="no-images">
@@ -1375,6 +1381,9 @@
             const fileInput = document.getElementById('fileInput');
             const imageContainer = document.getElementById('imageContainer');
             const dropzone = document.getElementById('dropzone');
+            const initialActions = document.getElementById('initialActions');
+            const closePhotosBtn2 = document.getElementById('closePhotosBtn2');
+            const dropzoneBrowseBtn = document.getElementById('dropzoneBrowseBtn');
 
             const roomTypes = [
                 'Living Room', 'Bedroom', 'Kitchen', 'Bathroom',
@@ -1389,23 +1398,37 @@
                 photosOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                // Ensure upload area is hidden when re-opening unless images already exist
+                // Initial state: show selection button unless images exist
                 if (!imageContainer.querySelector('.image-card')) {
+                    initialActions.style.display = 'flex';
                     dropzone.style.display = 'none';
                     imageContainer.style.display = 'none';
+                } else {
+                    initialActions.style.display = 'flex';
+                    dropzone.style.display = 'flex';
+                    imageContainer.style.display = 'grid';
                 }
             });
 
-            closePhotosBtn.addEventListener('click', () => {
+            const closeAction = () => {
                 photosOverlay.classList.remove('active');
                 document.body.style.overflow = '';
-            });
+            };
 
-            // Add Photos Button Logic - Show upload area only (don't trigger picker automatically)
+            closePhotosBtn.addEventListener('click', closeAction);
+            closePhotosBtn2.addEventListener('click', closeAction);
+
+            // Add Photos Button Logic - Replace button area with dropzone
             addPhotosBtn.addEventListener('click', () => {
+                initialActions.style.display = 'none';
                 dropzone.style.display = 'flex';
                 imageContainer.style.display = 'grid';
-                // fileInput.click(); // Removed to allow manual disclosure
+            });
+
+            // Browse Button inside Dropzone
+            dropzoneBrowseBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent dropzone click trigger duplication
+                fileInput.click();
             });
 
             // Drag and Drop Handlers
@@ -1431,7 +1454,10 @@
                 handleFiles(dt.files);
             }, false);
 
-            dropzone.addEventListener('click', () => fileInput.click());
+            dropzone.addEventListener('click', () => {
+                // Clicking the dropzone also triggers the file input
+                fileInput.click();
+            });
 
             fileInput.addEventListener('change', function () {
                 handleFiles(this.files);
