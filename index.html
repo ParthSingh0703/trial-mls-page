@@ -425,6 +425,165 @@
             color: #00d4ff;
             font-weight: bold;
         }
+
+        /* Photo Upload Overlay Styles */
+        .photos-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 25, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .photos-overlay.active {
+            display: block;
+        }
+
+        .action-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: transparent;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0078ff);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .upload-input {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .image-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .image-details {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .dropzone.drag-over {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dropzone-text {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+        }
+
+        .no-images {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 
@@ -434,11 +593,12 @@
         <p class="subtitle">Browser Automation Testing - Simulating Austin MLS Behavior</p>
 
         <div style="text-align: center; margin-bottom: 30px;">
-            <a href="upload_images.html" class="submit-btn"
-                style="display: inline-block; width: auto; text-decoration: none; margin: 0;">Photos</a>
+            <button id="openPhotosBtn" class="submit-btn"
+                style="display: inline-block; width: auto; margin: 0;">Photos</button>
         </div>
 
         <form id="mlsForm">
+
             <!-- LISTING META -->
             <div class="form-section">
                 <h2 class="section-title">Listing Meta</h2>
@@ -1178,10 +1338,182 @@
         </div>
     </div>
 
+    <!-- Photo Upload Overlay -->
+    <div id="photosOverlay" class="photos-overlay">
+        <div class="container">
+            <h2 style="color: #00d4ff; text-align: center; margin-bottom: 30px;">📸 Listing Photos</h2>
+
+            <div class="action-bar">
+                <button type="button" id="revealUploadBtn" class="btn btn-primary">Browse Files</button>
+                <button id="closePhotosBtn" class="btn btn-secondary">Back to Form</button>
+                <input type="file" name="files[]" id="fileInput" class="upload-input" multiple accept="image/*"
+                    style="display: none;">
+            </div>
+
+            <div id="dropzone" class="dropzone" style="display: none;">
+                <div class="dropzone-icon">📁</div>
+                <div class="dropzone-text">
+                    Drag & drop photos here or <b>Browse</b>
+                </div>
+            </div>
+
+            <div id="imageContainer" class="image-grid" style="display: none;">
+                <div class="no-images">
+                    No images uploaded yet. Drag some photos here or use the button above to get started.
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             initializeMultiSelects();
+            initializePhotoUpload();
         });
+
+        function initializePhotoUpload() {
+            const openPhotosBtn = document.getElementById('openPhotosBtn');
+            const closePhotosBtn = document.getElementById('closePhotosBtn');
+            const photosOverlay = document.getElementById('photosOverlay');
+            const fileInput = document.getElementById('fileInput');
+            const imageContainer = document.getElementById('imageContainer');
+            const dropzone = document.getElementById('dropzone');
+
+            const roomTypes = [
+                'Living Room', 'Bedroom', 'Kitchen', 'Bathroom',
+                'Dining Room', 'Exterior', 'Office', 'Backyard',
+                'Garage', 'Hallway', 'Laundry', 'Other'
+            ];
+
+            const browseBtn = document.getElementById('revealUploadBtn');
+
+            // Overlay management
+            openPhotosBtn.addEventListener('click', () => {
+                photosOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Ensure upload area is hidden when re-opening unless images already exist
+                if (!imageContainer.querySelector('.image-card')) {
+                    dropzone.style.display = 'none';
+                    imageContainer.style.display = 'none';
+                }
+            });
+
+            closePhotosBtn.addEventListener('click', () => {
+                photosOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            // Browse Button Logic - Show upload area only (don't trigger picker automatically)
+            browseBtn.addEventListener('click', () => {
+                dropzone.style.display = 'flex';
+                imageContainer.style.display = 'grid';
+                // fileInput.click(); // Removed to allow manual disclosure
+            });
+
+            // Drag and Drop Handlers
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, () => dropzone.classList.add('drag-over'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, () => dropzone.classList.remove('drag-over'), false);
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                handleFiles(dt.files);
+            }, false);
+
+            dropzone.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', function () {
+                handleFiles(this.files);
+                fileInput.value = '';
+            });
+
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const noImagesMsg = imageContainer.querySelector('.no-images');
+                    if (noImagesMsg) noImagesMsg.remove();
+                }
+
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const card = createImageCard(e.target.result, file.name);
+                        imageContainer.appendChild(card);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function createImageCard(src, filename) {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'image-preview';
+                img.alt = filename;
+
+                const details = document.createElement('div');
+                details.className = 'image-details';
+
+                // Room Type
+                const roomGroup = document.createElement('div');
+                roomGroup.className = 'form-group';
+                const roomLabel = document.createElement('label');
+                roomLabel.textContent = 'Room Type';
+                const roomSelect = document.createElement('select');
+
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "Select Room Type";
+                roomSelect.appendChild(defaultOption);
+
+                roomTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type;
+                    roomSelect.appendChild(option);
+                });
+
+                roomGroup.appendChild(roomLabel);
+                roomGroup.appendChild(roomSelect);
+
+                // Description
+                const descGroup = document.createElement('div');
+                descGroup.className = 'form-group';
+                const descLabel = document.createElement('label');
+                descLabel.textContent = 'Description';
+                const descInput = document.createElement('input');
+                descInput.type = 'text';
+                descInput.placeholder = 'Enter image description...';
+
+                descGroup.appendChild(descLabel);
+                descGroup.appendChild(descInput);
+
+                details.appendChild(roomGroup);
+                details.appendChild(descGroup);
+
+                card.appendChild(img);
+                card.appendChild(details);
+
+                return card;
+            }
+        }
 
         function initializeMultiSelects() {
             const multiSelects = document.querySelectorAll('select[multiple]');
