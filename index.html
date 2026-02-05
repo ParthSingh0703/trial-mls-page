@@ -46,6 +46,8 @@
             margin-bottom: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
         }
 
         .section-title {
@@ -1237,9 +1239,18 @@
                     e.stopPropagation();
                     // Close others first
                     document.querySelectorAll('.multi-select-options.open').forEach(el => {
-                        if (el !== optionsList) el.classList.remove('open');
+                        if (el !== optionsList) {
+                            el.classList.remove('open');
+                            const parentSection = el.closest('.form-section');
+                            if (parentSection) parentSection.style.zIndex = '1';
+                        }
                     });
-                    optionsList.classList.toggle('open');
+
+                    const isOpen = optionsList.classList.toggle('open');
+                    const parentSection = container.closest('.form-section');
+                    if (parentSection) {
+                        parentSection.style.zIndex = isOpen ? '100' : '1';
+                    }
                 });
             });
 
@@ -1247,6 +1258,8 @@
             document.addEventListener('click', () => {
                 document.querySelectorAll('.multi-select-options.open').forEach(el => {
                     el.classList.remove('open');
+                    const parentSection = el.closest('.form-section');
+                    if (parentSection) parentSection.style.zIndex = '1';
                 });
             });
         }
